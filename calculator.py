@@ -1,35 +1,57 @@
 class Calculator:
-    expression: list
+    __expression: list
+    __priority = ["/", "*", "+", "-"]
 
     def get_expression(self) -> list:
-        return self.expression
-    def set_expression(self, value) -> None:
-        self.expression = value
+        return self.__expression
+    def get_priority(self) -> list:
+        return self.__priority
 
+    def set_expression(self, value) -> None:
+        self.__expression = value
+    def set_priority(self, value) -> None:
+        self.__priority = value
+
+    def error(self):
+        return ValueError('Informe uma expressão válida!')
+    
     def result(self) -> float:
         numeric_expression = self.get_expression()
+        priority = self.get_priority()
         total = float(numeric_expression[0])
         number_position = 2
         expression_position = 1
         
-        while number_position < len(numeric_expression):
-            element = numeric_expression[expression_position]
-            number = float(numeric_expression[number_position])
-
-            if isinstance(number, float):
-                return ValueError('Informe uma expressão válida!')
-            print(total, element, number)
-            if element == "+":
-                total = total + number
-            elif element == "-":
-                total = total - number
-            elif element == "/":
-                total = total / number
-            elif element == "*":
-                total = total * number
-            else:
-                print("Digite uma expressão válida!")
-            print("Resultado:", total, "\n")
-            expression_position += 2
-            number_position += 2
+        for sinal in priority:
+            while number_position < len(numeric_expression):
+                element = numeric_expression[expression_position]
+                try:
+                    number_ant = float(numeric_expression[expression_position-1])
+                    number_pos = float(numeric_expression[expression_position+1])
+                except ValueError:
+                    self.error()
+                
+                if sinal == element:
+                    print("Solução: ", number_ant, element, number_pos)
+                    if element == "+":
+                        total = number_ant + number_pos
+                    elif element == "-":
+                        total = number_ant - number_pos
+                    elif element == "/":
+                        if element == 0:
+                            self.error()
+                        total = number_ant / number_pos
+                    elif element == "*":
+                        total = number_ant * number_pos
+                    else:
+                        self.error()
+                    print("Resultado:", total, "\n")
+                    print("numeric_expression: ", numeric_expression[expression_position])
+                    numeric_expression.remove(expression_position)
+                    numeric_expression.remove(expression_position)
+                    numeric_expression.remove(expression_position)
+                    numeric_expression.insert(expression_position-1, total)
+                expression_position += 2
+                number_position += 2
+        total = numeric_expression[0]
         return total

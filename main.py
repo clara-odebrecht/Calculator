@@ -1,10 +1,10 @@
 from calculator import Calculator
-
-expression = input("Digite uma expresão: ")
+from textwrap import dedent
 
 calculator = Calculator()
+expression = input("Digite uma expresão numérica: ")
 
-print("Expressão: ", expression.strip(), "\n")
+print("Expressão Digitada: ", expression.strip(), "\n")
 calculator.set_expression(expression.strip())
 
 print("Total: ", calculator.result())
